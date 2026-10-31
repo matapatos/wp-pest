@@ -62,6 +62,47 @@ Help:
   This command helps you set up WordPress integration and unit test suites.
 ```
 
+## Alternative setup via Composer installer-paths (no templating)
+
+If you prefer not to download WordPress through the `setup` command, you can scaffold the test files as static, placeholder-free files and let Composer install WordPress core and the SQLite drop-in via installer-paths:
+
+```bash
+vendor/bin/wp-pest setup:composer theme
+# or, for a plugin:
+vendor/bin/wp-pest setup:composer plugin
+```
+
+This creates `tests/` (bootstrap, `Pest.php`, example unit and integration tests) and a `phpunit.xml` in your project root, then prints a `composer.json` snippet to add. After that:
+
+```bash
+composer install
+vendor/bin/pest --group=unit
+vendor/bin/pest --group=integration
+```
+
+The plugin under test is detected at runtime from its `Plugin Name:` header, so no placeholder replacement is needed.
+
+### Selecting a WordPress version
+
+Change the `wordpress/wordpress` constraint in the printed snippet (e.g. `"6.4.*"`) or run:
+
+```bash
+composer require --dev wordpress/wordpress:6.4.*
+```
+
+### Testing multiple WordPress versions
+
+Use a CI matrix over several constraints, e.g. in GitHub Actions:
+
+```yaml
+strategy:
+  matrix:
+    wp: ["6.4.*", "6.5.*", "6.6.*", "6.7.*"]
+steps:
+  - run: composer require --dev wordpress/wordpress:${{ matrix.wp }}
+  - run: vendor/bin/pest --group=integration
+```
+
 ## Under the hood
 
 For an in-depth reasoning and explanation of how this package came to be, you can read [this article](https://madebydenis.com/wordpress-integration-tests-with-pest-php/).
