@@ -6,7 +6,8 @@ This projects adheres to [Semantic Versioning](https://semver.org/) and [Keep a 
 
 ## [Unreleased]
 
-_No documentation available about unreleased changes as of yet._
+### Added
+- New `setup:composer` command that scaffolds the test suites as static, placeholder-free files (in `templates/static/`) and prints the `composer.json` snippet needed to install WordPress core, `wp-phpunit`, and the SQLite drop-in via Composer installer-paths, as an alternative to the templating-based `setup` command. WordPress versions are selected through Composer constraints, and multiple versions can be tested via a CI matrix.
 
 ## [1.8.0] Modernize dependencies and require PHP 8.2+
 
